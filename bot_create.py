@@ -3,7 +3,6 @@ from aiogram import Bot, Dispatcher
 from dotenv import dotenv_values
 
 dotenv = dict(dotenv_values('.env'))
-print(dotenv)
 
 storage = MemoryStorage()
 
@@ -14,4 +13,3 @@ dp = Dispatcher(bot, storage=storage)
 
 admin_id = [int(x) for x in dotenv['ADMIN_ID'].split(',')]
 
-print(admin_id)

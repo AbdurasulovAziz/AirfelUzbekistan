@@ -1,16 +1,16 @@
 from aiogram import executor
-from bot_create import dp, bot
+from bot_create import dp, bot, dotenv
 from handlers import client
 
 client.register_handlers_client(dp)
 
-WEBHOOK_HOST = 'https://58ef-213-230-80-106.eu.ngrok.io'
-WEBHOOK_PATH = '/'
+WEBHOOK_HOST = dotenv['WEBHOOK_HOST']
+WEBHOOK_PATH = dotenv['WEBHOOK_PATH']
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
 # webserver settings
-WEBAPP_HOST = 'localhost'  # or ip
-WEBAPP_PORT = 8000
+WEBAPP_HOST = dotenv['WEBAPP_HOST']  # or ip
+WEBAPP_PORT = dotenv['WEBAPP_PORT']
 
 
 async def on_startup(dp):
