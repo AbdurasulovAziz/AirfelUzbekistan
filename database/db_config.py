@@ -8,6 +8,8 @@ mydb = mysql.connector.connect(
     database=dotenv['DATABASE']
 )
 
+mydb.ping(reconnect=True)
+
 cursor = mydb.cursor()
 
 cursor.execute('''TRUNCATE TABLE `masters`''')
