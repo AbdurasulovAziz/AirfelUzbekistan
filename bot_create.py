@@ -1,15 +1,16 @@
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram import Bot, Dispatcher
 from dotenv import dotenv_values
-
+from languages import BOT_LANGUAGE
 dotenv = dict(dotenv_values('.env'))
 
 storage = MemoryStorage()
+
+LANGUAGE=BOT_LANGUAGE
 
 
 bot = Bot(token=dotenv['BOT_TOKEN'])
 dp = Dispatcher(bot, storage=storage)
 
 
-admin_id = [int(x) for x in dotenv['ADMIN_ID'].split(',')]
 

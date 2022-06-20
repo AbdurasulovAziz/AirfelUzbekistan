@@ -3,14 +3,14 @@ from database import mydb, cursor
 
 class MasterData:
 
-    def add_master(master_id, master_name, master_phone, master_certificate):
-        cursor.execute(f'''INSERT INTO masters(`master_id`,`master_name`,`master_phone`, `master_certificate`)
-                        VALUES ({master_id},"{master_name}","{master_phone}",{master_certificate}) ''')
+    def add_master(master_id, master_name, master_phone):
+        cursor.execute(f'''INSERT INTO masters(`master_id`,`master_name`,`master_phone`)
+                        VALUES ({master_id},"{master_name}","{master_phone}") ''')
         mydb.commit()
 
-    def update_master(master_id, master_name, master_phone, master_certificate):
+    def update_master(master_id, master_name, master_phone):
         cursor.execute(
-            f'''UPDATE masters SET `master_name`="{master_name}", `master_phone`="{master_phone}", `master_certificate`={master_certificate}
+            f'''UPDATE masters SET `master_name`="{master_name}", `master_phone`="{master_phone}"
                         WHERE `master_id`={master_id} ''')
         mydb.commit()
 
@@ -23,17 +23,22 @@ class MasterData:
         cursor.execute(f'''UPDATE masters SET `master_point` = `master_point` + 1 WHERE `master_id` = {master_id} ''')
         mydb.commit()
 
-    @staticmethod
-    def minus_master_point(certificate, points):
+    def minus_master_point(master_number, points):
         cursor.execute(
-            f'''UPDATE masters SET `master_point` = `master_point` - {points} WHERE `master_certificate` = {certificate} ''')
+            f'''UPDATE masters SET `master_point` = `master_point` - {points} WHERE `master_phone` = {master_number} ''')
         mydb.commit()
 
 
 class AdminData:
 
-    @staticmethod
+    
     def get_master_data():
         cursor.execute(f'''SELECT * FROM masters''')
         master = cursor.fetchall()
         return master
+
+    def get_excel():
+        cursor.execute(f'''SELECT `master_name`, `master_phone`, `master_point` FROM masters''')
+        master = cursor.fetchall()
+        return master
+        

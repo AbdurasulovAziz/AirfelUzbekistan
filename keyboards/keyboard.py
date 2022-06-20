@@ -1,34 +1,44 @@
 
 from aiogram import types
-from bot_create import admin_id
+from bot_create import LANGUAGE, bot
+from aiogram.dispatcher import FSMContext
 
 
 
 
-
-def get_phone_keyboard():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True).add(types.KeyboardButton('Контакт юборинг', request_contact=True))
+async def get_phone_keyboard(state:FSMContext):
+    data = await state.get_data()
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True).add(types.KeyboardButton(LANGUAGE[data['lang']]['SendCon'], request_contact=True))
     return keyboard
 
 
-async def main_keyboard(message: types.Message):
+async def main_keyboard(message: types.Message, state:FSMContext):
+    data = await state.get_data()
+    admin_id = await bot.get_chat_member(chat_id='-688169493',user_id=message.from_user.id)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-    buttons = [types.KeyboardButton('Газ қозонни рўйхатдан ўтказиш'), types.KeyboardButton('Менинг анкетам👨🏻‍💼'), types.KeyboardButton('Бошқатдан рўйхатдан ўтиш🔄')]
+    buttons = [types.KeyboardButton(LANGUAGE[data['lang']]['RegKot']), types.KeyboardButton(LANGUAGE[data['lang']]['MyAccount']),types.KeyboardButton(LANGUAGE[data['lang']]['ChangeLang']), types.KeyboardButton(LANGUAGE[data['lang']]['ReReg'])]
     keyboard.add(*buttons)
-    if message.from_user.id in admin_id:
-        keyboard.add(types.KeyboardButton('Администратор бўлими'))
-    await message.answer('Кейинги амални танланг:', reply_markup=keyboard)
+    if admin_id['status'] != 'left':
+        keyboard.add(types.KeyboardButton(LANGUAGE[data['lang']]['AdminPanel_keyboard']))
+    await message.answer(LANGUAGE[data['lang']]['SelectNextDo'], reply_markup=keyboard)
 
 
-def sendAdmin_keyboard(master_id):
+async def sendAdmin_keyboard(master_id, master_lang):
     keyboard = types.InlineKeyboardMarkup(row_width=2)
-    buttons = [types.InlineKeyboardButton(text='Қабул қилиш',callback_data=f'Accept-{master_id}'), types.InlineKeyboardButton(text='Рад этиш', callback_data=f'Decline-{master_id}')]
+    buttons = [types.InlineKeyboardButton(text=LANGUAGE['У́збекча']['Accept_keyboard'],callback_data=f'Accept-{master_id}-{master_lang}'), types.InlineKeyboardButton(text=LANGUAGE['У́збекча']['Decline_keyboard'], callback_data=f'Decline-{master_id}-{master_lang}')]
     keyboard.add(*buttons)
     return keyboard
 
 
-def get_data_keyboard():
+async def get_data_keyboard(state:FSMContext):
+    data = await state.get_data()
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    buttons = [types.KeyboardButton('Маълумотларни юклаш'),types.KeyboardButton('Балларни айириш'),types.KeyboardButton('Ортга қайтиш⬅️')]
+    buttons = [types.KeyboardButton(LANGUAGE[data['lang']]['GetData']),types.KeyboardButton(LANGUAGE[data['lang']]['MinusPoint_keyboard']),types.KeyboardButton(LANGUAGE[data['lang']]['Back'])]
+    keyboard.add(*buttons)
+    return keyboard
+
+def language_keyboard():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    buttons = [types.KeyboardButton('Русский'),types.KeyboardButton('У́збекча')]
     keyboard.add(*buttons)
     return keyboard

@@ -10,6 +10,8 @@ mydb = mysql.connector.connect(
 
 cursor = mydb.cursor()
 
-#cursor.execute('''TRUNCATE TABLE `masters`''')
+cursor.execute('''TRUNCATE TABLE `masters`''')
+
+
 
 mydb.commit()
