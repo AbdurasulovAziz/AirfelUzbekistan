@@ -7,8 +7,7 @@ mydb = mysql.connector.connect(
     password=dotenv['DATABASE_PASS'],
     database=dotenv['DATABASE']
 )
-
-mydb.ping(reconnect=True)
+mydb.reconnect(attempts=10, delay=0)
 
 cursor = mydb.cursor()
 
