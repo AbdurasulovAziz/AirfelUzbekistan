@@ -16,8 +16,11 @@ async def start(message: types.Message, state:FSMContext):
         if master_id == None:
             await Registration.registration(message)
         else:
-            await message.answer(LANGUAGE[data['lang']]['SelectNextDo'])
-            await main_keyboard(message, state)
+            try:
+                await message.answer(LANGUAGE[data['lang']]['SelectNextDo'])
+                await main_keyboard(message, state)
+            except KeyError:
+                await Registration.registration(message)
     except TypeError:
         await message.answer('Бот уже запущен')
         await main_keyboard(message, state)
