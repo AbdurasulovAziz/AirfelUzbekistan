@@ -12,8 +12,4 @@ mydb.ping(reconnect=True)
 
 cursor = mydb.cursor()
 
-cursor.execute('''TRUNCATE TABLE `masters`''')
-
-
-
 mydb.commit()
