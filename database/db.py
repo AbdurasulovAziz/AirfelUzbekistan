@@ -1,44 +1,51 @@
-from database import mydb, cursor
+from database import create_connection
 
 
 class MasterData:
 
     def add_master(master_id, master_name, master_phone):
-        cursor.execute(f'''INSERT INTO masters(`master_id`,`master_name`,`master_phone`)
+        cnx, cur = create_connection()
+        cur.execute(f'''INSERT INTO masters(`master_id`,`master_name`,`master_phone`)
                         VALUES ({master_id},"{master_name}","{master_phone}") ''')
-        mydb.commit()
+        cnx.commit()
 
     def update_master(master_id, master_name, master_phone):
-        cursor.execute(
+        cnx, cur = create_connection()
+        cur.execute(
             f'''UPDATE masters SET `master_name`="{master_name}", `master_phone`="{master_phone}"
                         WHERE `master_id`={master_id} ''')
-        mydb.commit()
+        cnx.commit()
 
     def get_master(master_id):
-        cursor.execute(f''' SELECT * FROM `masters` WHERE `master_id` = {master_id}''')
-        master = cursor.fetchone()
+        cnx, cur = create_connection()
+        cur.execute(
+            f''' SELECT * FROM `masters` WHERE `master_id` = {master_id}''')
+        master = cur.fetchone()
         return master
 
     def update_master_point(master_id):
-        cursor.execute(f'''UPDATE masters SET `master_point` = `master_point` + 1 WHERE `master_id` = {master_id} ''')
-        mydb.commit()
+        cnx, cur = create_connection()
+        cur.execute(
+            f'''UPDATE masters SET `master_point` = `master_point` + 1 WHERE `master_id` = {master_id} ''')
+        cnx.commit()
 
     def minus_master_point(master_number, points):
-        cursor.execute(
+        cnx, cur = create_connection()
+        cur.execute(
             f'''UPDATE masters SET `master_point` = `master_point` - {points} WHERE `master_phone` = {master_number} ''')
-        mydb.commit()
+        cnx.commit()
 
 
 class AdminData:
-
-    
     def get_master_data():
-        cursor.execute(f'''SELECT * FROM masters''')
-        master = cursor.fetchall()
+        cnx, cur = create_connection()
+        cur.execute(f'''SELECT * FROM masters''')
+        master = cur.fetchall()
         return master
 
     def get_excel():
-        cursor.execute(f'''SELECT `master_name`, `master_phone`, `master_point` FROM masters''')
-        master = cursor.fetchall()
+        cnx, cur = create_connection()
+        cur.execute(
+            f'''SELECT `master_name`, `master_phone`, `master_point` FROM masters''')
+        master = cur.fetchall()
         return master
-        
