@@ -41,7 +41,7 @@ class Photography(UserInfo):
         async def accept(call: types.CallbackQuery):
             callback = call.data.split('-')
             master_info = MasterData.get_master(callback[1])
-            caption = f'''{LANGUAGE[data['У́збекча']]['Master']} {master_info[1]}\n{LANGUAGE[data['У́збекча']]['MasterPhone']} {master_info[2]}'''
+            caption = f'''{LANGUAGE['У́збекча']['Master']} {master_info[1]}\n{LANGUAGE['У́збекча']['MasterPhone']} {master_info[2]}'''
             if callback[0] == 'Accept':
                 MasterData.update_master_point(callback[1])
                 await bot.send_message(chat_id=callback[1], text=LANGUAGE[callback[2]]['YourAccepted'])
