@@ -40,6 +40,8 @@ class Photography(UserInfo):
         @dp.callback_query_handler(regexp='(.+)-(.+)-(.+)')
         async def accept(call: types.CallbackQuery):
             callback = call.data.split('-')
+            master_info = MasterData.get_master(callback[1])
+            caption = f'''{LANGUAGE[data['У́збекча']]['Master']} {master_info[1]}\n{LANGUAGE[data['У́збекча']]['MasterPhone']} {master_info[2]}'''
             if callback[0] == 'Accept':
                 MasterData.update_master_point(callback[1])
                 await bot.send_message(chat_id=callback[1], text=LANGUAGE[callback[2]]['YourAccepted'])
@@ -48,7 +50,7 @@ class Photography(UserInfo):
             elif callback[0] == 'Decline':
                 await bot.send_message(chat_id=callback[1], text=LANGUAGE[callback[2]]['YourDecline'])
                 await bot.delete_message(chat_id='-688169493', message_id=call.message.message_id)
-                await bot.send_message('-688169493', text=f'{caption}\n{LANGUAGE["У́збекча"]["Accepted"]}')
+                await bot.send_message('-688169493', text=f'{caption}\n{LANGUAGE["У́збекча"]["Declined"]}')
             await call.answer()
         await state.reset_state(with_data=False)
             
