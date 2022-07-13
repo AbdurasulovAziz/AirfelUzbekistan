@@ -46,11 +46,11 @@ class Photography(UserInfo):
                 MasterData.update_master_point(callback[1])
                 await bot.send_message(chat_id=callback[1], text=LANGUAGE[callback[2]]['YourAccepted'])
                 await bot.delete_message(chat_id='-688169493', message_id=call.message.message_id)
-                await bot.send_message('-688169493', text=f'{caption}\n{LANGUAGE["У́збекча"]["Accepted"]}')
+                await bot.send_photo('-688169493', data['photo'], caption=f'{caption}\n{LANGUAGE["У́збекча"]["Accepted"]}')
             elif callback[0] == 'Decline':
                 await bot.send_message(chat_id=callback[1], text=LANGUAGE[callback[2]]['YourDecline'])
                 await bot.delete_message(chat_id='-688169493', message_id=call.message.message_id)
-                await bot.send_message('-688169493', text=f'{caption}\n{LANGUAGE["У́збекча"]["Declined"]}')
+                await bot.send_photo('-688169493', data['photo'], caption=f'{caption}\n{LANGUAGE["У́збекча"]["Declined"]}')
             await call.answer()
         await state.reset_state(with_data=False)
             
