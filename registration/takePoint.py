@@ -43,5 +43,6 @@ class TakePoints(MasterPoint):
             await main_keyboard(message, state)
             await state.reset_state(with_data=False)
         else:
-            await message(LANGUAGE[data['lang']]['SendDig'])
+            data = await state.get_data()
+            await message.answer(LANGUAGE[data['lang']]['SendDig'])
             await MasterPoint.points.set()

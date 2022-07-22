@@ -33,8 +33,8 @@ class Photography(UserInfo):
         master_data = MasterData.get_master(message.from_user.id)
         data = await state.get_data()
         caption = f'''{LANGUAGE[data['lang']]['Master']} {master_data[1]}\n{LANGUAGE[data['lang']]['MasterPhone']} {master_data[2]}'''
-        await bot.send_photo('-688169493', data['photo_sticker'], caption=caption)
-        await bot.send_photo('-688169493', data['photo'], caption=caption, reply_markup=await sendAdmin_keyboard(message.from_user.id,data["lang"]))
+        await bot.send_photo('-1001630122577', data['photo_sticker'], caption=caption)
+        await bot.send_photo('-1001630122577', data['photo'], caption=caption, reply_markup=await sendAdmin_keyboard(message.from_user.id,data["lang"]))
         await main_keyboard(message, state)
         await state.reset_state(with_data=False)
 
