@@ -3,6 +3,7 @@ from database import create_connection
 
 class MasterData:
 
+    @staticmethod
     def add_master(master_id, master_name, master_phone):
         cnx, cur = create_connection()
         cur.execute(f'''INSERT INTO masters(`master_id`,`master_name`,`master_phone`)
@@ -10,6 +11,7 @@ class MasterData:
         cnx.commit()
         cnx.close()
 
+    @staticmethod
     def update_master(master_id, master_name, master_phone):
         cnx, cur = create_connection()
         cur.execute(
@@ -18,6 +20,7 @@ class MasterData:
         cnx.commit()
         cnx.close()
 
+    @staticmethod
     def get_master(master_id):
         cnx, cur = create_connection()
         cur.execute(
@@ -26,6 +29,7 @@ class MasterData:
         cnx.close()
         return master
 
+    @staticmethod
     def update_master_point(master_id):
         cnx, cur = create_connection()
         cur.execute(
@@ -33,6 +37,7 @@ class MasterData:
         cnx.commit()
         cnx.close()
 
+    @staticmethod
     def minus_master_point(master_number, points):
         cnx, cur = create_connection()
         cur.execute(
@@ -42,6 +47,8 @@ class MasterData:
 
 
 class AdminData:
+
+    @staticmethod
     def get_master_data():
         cnx, cur = create_connection()
         cur.execute(f'''SELECT * FROM masters''')
@@ -49,6 +56,7 @@ class AdminData:
         cnx.close()
         return master
 
+    @staticmethod
     def get_excel():
         cnx, cur = create_connection()
         cur.execute(

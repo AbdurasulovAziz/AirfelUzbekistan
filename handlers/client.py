@@ -1,29 +1,33 @@
 from aiogram import Dispatcher, types
-import aiogram
-from bot_create import dp, LANGUAGE
+from bot_create import dp, LANGUAGE, bot
 from registration import Registration, Photography, TakePoints, choose_language
-from keyboards import main_keyboard, get_data_keyboard, language_keyboard
+from keyboards import main_keyboard, get_data_keyboard
 from database import MasterData, AdminData
 from aiogram.dispatcher import FSMContext
 import pandas as pd
 
 
 @dp.message_handler(commands='start')
-async def start(message: types.Message, state:FSMContext):
-    try:
-        data = await state.get_data()
-        master_id = MasterData.get_master(message.from_user.id)
-        if master_id == None:
-            await Registration.registration(message)
-        else:
-            try:
-                await message.answer(LANGUAGE[data['lang']]['SelectNextDo'])
-                await main_keyboard(message, state)
-            except KeyError:
+async def start(message: types.Message, state: FSMContext):
+    if message.chat.id == -1001630122577:
+        await bot.send_message(chat_id=-1001630122577,
+                               text='Нельзя использовать бота в группе!\nБотдан гурухда фойдаланиш мумкин эмас!',
+                               reply_markup=types.ReplyKeyboardRemove())
+    else:
+        try:
+            data = await state.get_data()
+            master_id = MasterData.get_master(message.from_user.id)
+            if master_id == None:
                 await Registration.registration(message)
-    except TypeError:
-        await message.answer('Бот уже запущен')
-        await main_keyboard(message, state)
+            else:
+                try:
+                    await message.answer(LANGUAGE[data['lang']]['SelectNextDo'])
+                    await main_keyboard(message, state)
+                except KeyError:
+                    await Registration.registration(message)
+        except TypeError:
+            await message.answer('Бот уже запущен')
+            await main_keyboard(message, state)
 
 @dp.message_handler(lambda message: message.text == 'Менинг анкетам👨🏻‍💼' or message.text == 'Моя анкета👨🏻‍💼')
 async def get_info(message: types.Message, state:FSMContext):
@@ -53,7 +57,7 @@ async def get_data(message: types.Message, state:FSMContext):
         for i in data:
             arr = []
             for j in i:
-                arr.append(str(j))
+                arr.append(j)
             array.append(arr)
         array = pd.DataFrame(array, columns=columns)
         array.to_excel('database/Маълумотлар.xlsx', index=False)
@@ -73,7 +77,11 @@ async def get_data(message: types.Message, state:FSMContext):
 @dp.message_handler(lambda message: message.text == 'Поменять язык' or message.text == 'Тилни у́згартириш')
 async def change_lang(message: types.Message):
     await choose_language(message)
-    
+
+@dp.errors_handler(exception=KeyError)
+async def key_error_exception(update: types.Update, error):
+    await update.message.answer('Введите /start\n/start тугмасини босинг')
+    return True
     
     
 
