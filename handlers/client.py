@@ -15,13 +15,11 @@ async def start(message: types.Message, state: FSMContext):
                                reply_markup=types.ReplyKeyboardRemove())
     else:
         try:
-            data = await state.get_data()
             master_id = MasterData.get_master(message.from_user.id)
             if master_id == None:
                 await Registration.registration(message)
             else:
                 try:
-                    await message.answer(LANGUAGE[data['lang']]['SelectNextDo'])
                     await main_keyboard(message, state)
                 except KeyError:
                     await Registration.registration(message)

@@ -15,7 +15,7 @@ class MasterPoint(StatesGroup):
 
 class TakePoints(MasterPoint):
 
-    async def takePoints_state(message: types.Message, state:FSMContext):
+    async def takePoints_state(message: types.Message, state: FSMContext):
         data = await state.get_data()
         await message.answer(LANGUAGE[data['lang']]['MasterNum'], reply_markup=types.ReplyKeyboardRemove())
         await MasterPoint.master_number.set()
