@@ -1,5 +1,5 @@
 from aiogram import Dispatcher, types
-from bot_create import dp, LANGUAGE, bot
+from bot_create import dp, LANGUAGE, bot, admin_chat
 from registration import Registration, Photography, TakePoints, choose_language
 from keyboards import main_keyboard, get_data_keyboard
 from database import MasterData, AdminData
@@ -9,14 +9,14 @@ import pandas as pd
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message, state: FSMContext):
-    if message.chat.id == -1001630122577:
-        await bot.send_message(chat_id=-1001630122577,
+    if message.chat.id == admin_chat:
+        await bot.send_message(chat_id=admin_chat,
                                text='Нельзя использовать бота в группе!\nБотдан гурухда фойдаланиш мумкин эмас!',
                                reply_markup=types.ReplyKeyboardRemove())
     else:
         try:
             master_id = MasterData.get_master(message.from_user.id)
-            if master_id == None:
+            if master_id is None:
                 await Registration.registration(message)
             else:
                 try:
@@ -26,6 +26,13 @@ async def start(message: types.Message, state: FSMContext):
         except TypeError:
             await message.answer('Бот уже запущен')
             await main_keyboard(message, state)
+
+
+@dp.message_handler(content_types='photo')
+async def photo_message(message:types.Message, state:FSMContext):
+    data = await state.get_data()
+    await message.answer(LANGUAGE[data['lang']]['FromKeyb'])
+
 
 @dp.message_handler(lambda message: message.text == 'Менинг анкетам👨🏻‍💼' or message.text == 'Моя анкета👨🏻‍💼')
 async def get_info(message: types.Message, state:FSMContext):

@@ -1,5 +1,5 @@
 
-from bot_create import dp, bot, LANGUAGE
+from bot_create import dp, bot, LANGUAGE, admin_chat
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -37,8 +37,8 @@ class Photography(UserInfo):
         data = await state.get_data()
         await message.photo[-1].download(f'registration/yadiskIMG/{message.photo[-1].file_unique_id}.png')
         caption = f'''{LANGUAGE[data['lang']]['Master']} {master_data[1]}\n{LANGUAGE[data['lang']]['MasterPhone']} {master_data[2]}'''
-        await bot.send_photo(-1001630122577, data['photo_sticker'].file_id, caption=caption)
-        await bot.send_photo(-1001630122577, message.photo[-1].file_id, caption=caption,
+        await bot.send_photo(admin_chat, data['photo_sticker'].file_id, caption=caption)
+        await bot.send_photo(admin_chat, message.photo[-1].file_id, caption=caption,
                              reply_markup=await sendAdmin_keyboard(message.from_user.id,data["lang"],
                                                                    data['photo_sticker'].file_unique_id))
         await state.reset_state(with_data=False)
@@ -52,6 +52,9 @@ class Photography(UserInfo):
         master_info = MasterData.get_master(callback[1])
         caption = f'''{LANGUAGE['У́збекча']['Master']} {master_info[1]}\n{LANGUAGE['У́збекча']['MasterPhone']} {master_info[2]}'''
         if callback[0] == 'Accept':
+            await call.message.edit_reply_markup(reply_markup=None)
+            await call.message.edit_caption(f'{caption}\n{LANGUAGE["У́збекча"]["Accepted"]}')
+
             filename = f'1. {(datetime.now() + timedelta(hours=3)).strftime("%Y_%m_%d %H_%M_%S")} {master_info[2]}'
             filename2 = f'2. {(datetime.now() + timedelta(hours=3)).strftime("%Y_%m_%d %H_%M_%S")} {master_info[2]}'
 
@@ -64,13 +67,15 @@ class Photography(UserInfo):
             os.remove(f'registration/yadiskIMG/{call.message.photo[-1].file_unique_id}.png')
             os.remove(f'registration/yadiskIMG/{callback[3]}.png')
             MasterData.update_master_point(callback[1])
-            await call.message.edit_reply_markup(reply_markup=None)
-            await call.message.edit_caption(f'{caption}\n{LANGUAGE["У́збекча"]["Accepted"]}')
+
             await bot.send_message(chat_id=callback[1], text=LANGUAGE[callback[2]]['YourAccepted'])
         elif callback[0] == 'Decline':
-            await bot.send_message(chat_id=callback[1], text=LANGUAGE[callback[2]]['YourDecline'])
             await call.message.edit_reply_markup(reply_markup=None)
             await call.message.edit_caption(f'{caption}\n{LANGUAGE["У́збекча"]["Declined"]}')
+            await bot.send_message(chat_id=callback[1], text=LANGUAGE[callback[2]]['YourDecline'])
+            os.remove(f'registration/yadiskIMG/{call.message.photo[-1].file_unique_id}.png')
+            os.remove(f'registration/yadiskIMG/{callback[3]}.png')
+
         await call.answer()
 
 

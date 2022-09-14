@@ -4,6 +4,8 @@ from dotenv import dotenv_values
 from languages import BOT_LANGUAGE
 dotenv = dict(dotenv_values('.env'))
 
+admin_chat = -1001630122577
+
 storage = MemoryStorage()
 
 LANGUAGE=BOT_LANGUAGE
